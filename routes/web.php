@@ -14,3 +14,18 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/get-me', 'TelegramController@getMe');
+
+Route::get('/set-hook', 'TelegramController@setWebHook');
+
+Route::get('/remove-hook', 'TelegramController@removeWebHook');
+
+Route::post(env('TELEGRAM_BOT_TOKEN') . '/webhook', 'TelegramController@handleRequest');
+
+// Route::get('/test', function () {
+//     $client = new GuzzleHttp\Client();
+// 	$res = $client->get('https://api.coindesk.com/v1/bpi/currentprice.json');
+// 	return json_decode($res->getBody());
+// });
+
