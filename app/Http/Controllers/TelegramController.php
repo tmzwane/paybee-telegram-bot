@@ -54,7 +54,7 @@ class TelegramController extends Controller
         $this->text = $request['message']['text'];
 
         try {
-            $telegram = Telegram::where('username', $this->username)->latest()->firstOrFail();
+            $telegram = Telegram::where('username', $this->username)->get();
         } catch (Exception $exception) {
             $seed = array(
                 array('username' => $data['telegram_username'], 
@@ -76,26 +76,27 @@ class TelegramController extends Controller
             );
 
             Telegram::insert($seed);
+            $telegram = Telegram::where(array('username' => $this->username, 'is_active' => 1 ))->get();
         }
  
         switch (true) {
             case strpos($this->text, '/start'):
             	$this->sendMessage('All good things start like this :-)');
             	break;
-            case strpos($this->text, '/menu'):
+            case strpos($this->text, '/menu') && in_array('/menu', $telegram):
                 $this->showMenu();
                 break;
-            case strpos($this->text, '/getUserID'):
+            case strpos($this->text, '/getUserID') && in_array('/getUserID', $telegram):
                 $this->getUserID();
                 break;
-            case strpos($this->text, '/getBTCEquivalent'):
+            case strpos($this->text, '/getBTCEquivalent') && in_array('/getBTCEquivalent', $telegram):
                 $this->getBTCEquivalent();
                 break;
-            case strpos($this->text, '/getGlobal'):
+            case strpos($this->text, '/getGlobal') && in_array('/getGlobal', $telegram):
                 $this->getGlobal();
                 break;
             default:
-                $this->getBTCEquivalent();
+                $this->sendMessage('Not allowed, configure settings on your profile at '.env('APP_URL'));
         }
     }
  
@@ -103,12 +104,22 @@ class TelegramController extends Controller
     {
         $message = '';
         if ($info) { $message .= $info . chr(10); }
-
-        $message .= '/menu'.chr(10);
-        $message .= '/getUserID'.chr(10);
-        $message .= '/getBTCEquivalent [amount] [currency]'.chr(10);
-        $message .= '/getGlobal'.chr(10);
- 
+        
+        switch (true) {
+            case in_array('/menu', $telegram):
+                $message .= '/menu'.chr(10);
+                break;
+            case in_array('/getUserID', $telegram):
+                $message .= '/getUserID'.chr(10);
+                break;
+            case in_array('/getBTCEquivalent', $telegram):
+                $message .= '/getBTCEquivalent [amount] [currency]'.chr(10);
+                break;
+            case in_array('/getUserID', $telegram):
+                $message .= '/getGlobal'.chr(10);
+                break;
+        }
+        
         $this->sendMessage($message);
     }
  

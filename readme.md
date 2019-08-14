@@ -7,9 +7,11 @@ This is a laravel project integrated with a [Telegram](https://www.telegram.org/
 
 ## The bot
 
-The bot only offers two commands as start up, then rest of the commands can be set PayBee application.
+[The Bot on Telegram](http://t.me/paybeetelbot)
 
-The first command fetches the current BTC rate from [Coindesk](http://www.coindesk.com/api/) and display the BTC equivalent for a given amount to the user in the chat.
+The bot only offers two commands default commands, then the rest of the commands can be enabled by the user on thei  PayBee profile.
+
+The first default command fetches the current BTC rate from [Coindesk](http://www.coindesk.com/api/) and display the BTC equivalent for a given amount to the user in the chat.
 
 The currency is chosen by the user.
 
@@ -202,8 +204,13 @@ After executing the command. Some of the files known as Authentication scaffoldi
 	[base_url]/http://playground/password/reset
 
 # ABOUT AUTHOR
+
 ## Thabang Zwane
-[TMZwane.com](https://tmzwane.com)
-[Twiter](https://twitter.com/tm_zwane)
-[Telegram]()
-[Instagram]()
+
+[TMZwane.com](https://tmzwane.com) that's my personal website
+
+[Twiter](https://twitter.com/tm_zwane) follow me on twitter, I will follow back.
+
+[Telegram]() let's chat!
+
+[Instagram]() I don't post much, but I'm there.

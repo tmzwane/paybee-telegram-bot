@@ -93,11 +93,29 @@ class BotConfigController extends Controller
         
         $data['telegram_db_data'] = $telegram;
 
-        return view('bot_config')->with($data);
+        $msg = [
+            'type' => 'success',
+            'value' => 'Your Telegram User ID is now linked to you PayBee Profile',
+        ];
+
+        return redirect()->back()->with($msg);
     }
 
     public function saveBotConfig(Request $request)
     {
-        echo "Well done";
+        $input =  $request->input(); unset($input['_token']);
+
+        foreach ($input as $key => $value) {
+            $id = (int) filter_var($key, FILTER_SANITIZE_NUMBER_INT);
+            $field_name = str_replace('_'.$id,'',$key);
+            Telegram::where('id', $id)->update(array($field_name => $value));
+        }
+        
+        $msg = array();
+
+        $msg['type'] = 'success';
+        $msg['value'] = 'Your Bot Settings Have been configured';
+
+        return redirect()->back()->with($msg);
     }
 }

@@ -20,11 +20,55 @@
           </h2>
         </div>
         <div class="col-md-5 order-md-1">
-          <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Content" class="featurette-image" width="350" height="350">
+          <img src="{{ asset('tel-bot.png') }}" alt="Content" class="featurette-image" width="350" height="350">
         </div>
       </div>
     <br>
-    @include('bot_config_settings')
+    @if(!empty($telegram_username))
+      {{ Form::open(array('action' => 'BotConfigController@saveBotConfig')) }}
+      <h2 class="sub-header">Available commands to activate/deactivate on Telegram</h2><br>
+      @if(!empty($value))
+      <div class="alert alert-{{ $type }} alert-dismissible fade show">
+          <strong>Success</strong> {{ $value }}
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+      </div>
+      @endif
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th><h2>Command</h2></th>
+              <th><h2>Default Setting</h2></th>
+              <th><h2>Active</h2></th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach($telegram_db_data as $config_settings)
+                <tr>
+                  <td>{{ $config_settings->id }}</td>
+                  <td>{{ $config_settings->command }}</td>
+                  <td>
+                    {{Form::text("default_setting_".$config_settings->id, 
+                                 old( $config_settings->default_setting ) ? old( $config_settings->default_setting ) : (!empty( $config_settings->default_setting ) ? $config_settings->default_setting : null),
+                                 [
+                                    "class" => "form-group",
+                                    "placeholder" => $config_settings->default_setting,
+                                 ])
+                    }}
+                  </td>
+                  <td>
+                    {{ Form::checkbox('is_active_'.$config_settings->id,"1", $config_settings->is_active, null, array('id'=> 'is_active_'.$config_settings->id)) }} 
+                  </td>
+                </tr>
+            @endforeach
+          </tbody>
+          
+        </table>
+      </div>
+      {{ Form::submit('Save Settings', array('id'=> 'button')) }} 
+      {{ Form::close() }}
+    @endif
   </div>
 </div>
 </div>
