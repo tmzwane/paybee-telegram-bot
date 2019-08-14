@@ -17,6 +17,8 @@ class CreateTelegramsTable extends Migration
             $table->increments('id');
             $table->string('username');
             $table->string('command');
+            $table->string('default_setting')->nullable();
+            $table->boolean('is_active')->default('0');;
             $table->timestamps();
         });
     }

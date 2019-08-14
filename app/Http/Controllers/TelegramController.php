@@ -29,7 +29,7 @@ class TelegramController extends Controller
 
     public function setWebHook()
 	{
-	    $url = 'https://22e2dae3.ngrok.io/';
+	    $url = env('APP_URL');
 	    $url .= env('TELEGRAM_BOT_TOKEN') . '/webhook';
 
 	    $response = $this->telegram->setWebhook(['url' => $url]);
@@ -39,7 +39,7 @@ class TelegramController extends Controller
 
 	public function removeWebHook()
 	{
-	    $url = 'https://22e2dae3.ngrok.io/';
+	    $url = env('APP_URL');
 	    $url .= env('TELEGRAM_BOT_TOKEN') . '/webhook';
 
 	    $response = $this->telegram->removeWebHook(['url' => $url]);
@@ -53,10 +53,30 @@ class TelegramController extends Controller
         $this->username = $request['message']['from']['username'];
         $this->text = $request['message']['text'];
 
-        Telegram::create([
-            'username' => $this->username,
-            'command' => $this->text
-        ]);
+        try {
+            $telegram = Telegram::where('username', $this->username)->latest()->firstOrFail();
+        } catch (Exception $exception) {
+            $seed = array(
+                array('username' => $data['telegram_username'], 
+                      'command' => '/start', 
+                      'default_setting' => '', 
+                      'is_active' => 0),
+                array('username' => $data['telegram_username'], 
+                      'command' => '/getUserID', 
+                      'default_setting' => '', 
+                      'is_active' => 1),
+                array('username' => $data['telegram_username'], 
+                      'command' => '/getBTCEquivalent', 
+                      'default_setting' => 'USD', 
+                      'is_active' => 1),
+                array('username' => $data['telegram_username'], 
+                      'command' => '/getGlobal', 
+                      'default_setting' => '', 
+                      'is_active' => 0)
+            );
+
+            Telegram::insert($seed);
+        }
  
         switch (true) {
             case strpos($this->text, '/start'):
@@ -66,7 +86,7 @@ class TelegramController extends Controller
                 $this->showMenu();
                 break;
             case strpos($this->text, '/getUserID'):
-                $this->checkDatabase();
+                $this->getUserID();
                 break;
             case strpos($this->text, '/getBTCEquivalent'):
                 $this->getBTCEquivalent();
@@ -139,7 +159,7 @@ class TelegramController extends Controller
  				$this->sendMessage($this->username, true);
             }
         } catch (Exception $exception) {
-            $error = "Sorry, no such user found, you must be new here.\n";
+            $error = "You must be new here.\n";
             $error .= "Please select one of the following options: \n";
             $this->showMenu($error);
         }

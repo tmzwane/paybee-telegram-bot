@@ -1,11 +1,81 @@
-# Project Overview
+# PROJECT OVERVIEW
 
 This is a laravel project integrated with a [Telegram](https://www.telegram.org/) bot which accesses [Coindesk API](http://www.coindesk.com/api/) to get data about Bitcoin market prices and outputs this data on request to a telegram channel. Telegram is a non-profit cloud-based instant messaging service that has apps running in multiple operating systems and offers a great security.
 
 * Read [Telegram API](https://core.telegram.org/api) for creating a bot
 * Frontend site endpoint [base_url]/bot-config is restricted to configure the bot
 
-## Setting up the project from scretch
+## The bot
+
+The bot only offers two commands as start up, then rest of the commands can be set PayBee application.
+
+The first command fetches the current BTC rate from [Coindesk](http://www.coindesk.com/api/) and display the BTC equivalent for a given amount to the user in the chat.
+
+The currency is chosen by the user.
+
+Example call:
+
+    /getBTCEquivalent 30 USD
+
+Example response:
+
+    30 USD is 0.08 BTC (760.45 USD - 1 BTC)
+
+If no currency is given the default currency should be used.
+
+The second command should return the paybee user_id of the user.
+
+This requires some sort of linking process between the paybee-user and the telegram-user when the bot is initially started.
+
+Example call:
+
+    /getUserID
+
+Example response:
+
+    2
+
+
+## The frontend component
+
+The url
+
+    bot-config
+
+Is a restricted site which lets the logged in user define the following things:
+
+* Default currency of the bot
+
+* All settings for the bot you think should be settable by the user:
+	[ ] Configure start method to get a special gretting when calling the start command. 
+	[ ] Configure menu method to find all of the available commands. 
+	[ ] Configure getGlobal method to view all the exchange rates available against BTC.
+
+* Also this site should show if a telegram account is already linked to the user account.
+
+* If yes, then show the telegram-id or phone number of the user.
+
+* If not, then show the user what's  needed to link his paybee account to his telegram account.
+
+
+## General
+
+Use the laravel default authentication to setup a restricted site.
+
+Use migrations for creating database tables.
+
+Use bootstrap for the frontend site.
+
+The useage of third party plugins is allowed.
+
+# SETTING UP THE PROJECT VIA GIT CLONE ON A LINUX VPS
+
+# FUTURE IMPROVEMENTS SUGGESTIONS
+References [Luno API]
+
+# SETTING UP THE PROJECT FROM SCRETCH
+
+* Reference [Creating A Cryptocurrency Telegram Bot API With Laravel](https://tutsforweb.com/creating-a-cryptocurrency-telegram-bot-with-laravel/)
 
 To create a new project, run the following command:
 
@@ -120,69 +190,20 @@ It will be like `https://paybeetelbot.co.za/set-hook`.
 
 * Then restart the Apache server: `service apache2 restart`
 
-## The bot
+## Setting Up front-end Authentication
+Execute the following command to start:
+	
+	php artisan make:auth
 
-The bot only offers two commands.
+After executing the command. Some of the files known as Authentication scaffolding generated into our application, routes have also been updated. `Route::auth()` is a method that cleanly contains all the login and register routes. The following routes will be created with their front-end:
 
-The first command fetches the current BTC rate from [Coindesk](http://www.coindesk.com/api/) and display the BTC equivalent for a given amount to the user in the chat.
+	[base_url]/register
+	[base_url]/login
+	[base_url]/http://playground/password/reset
 
-The currency is chosen by the user.
-
-Example call:
-
-    /getBTCEquivalent 30 USD
-
-Example response:
-
-    30 USD is 0.08 BTC (760.45 USD - 1 BTC)
-
-If no currency is given the default currency should be used.
-
-The second command should return the paybee user_id of the user.
-
-This requires some sort of linking process between the paybee-user and the telegram-user when the bot is initially started.
-
-Example call:
-
-    /getUserID
-
-Example response:
-
-    2
-
-
-## The frontend component
-
-The url
-
-    bot-config
-
-Is a restricted site which lets the logged in user define the following things:
-
-* default currency of the bot
-* all settings for the bot you think should be settable by the user
-	Start adding methods so that your bot can respond to your requests. 
-
-	Add a method to find all of the available commands. 
-
-	Add a method to get crypto market global data. 
-
-	Another method to get prices of top 10 cryptocurrencies. 
-
-	Last one to get data for a specific cryptocurrency.
-
-Also this site should show if a telegram account is already linked to the user account.
-
-If yes, then show the telegram-id or phone number of the user.
-
-If not, then show the user what's  needed to link his paybee account to his telegram account.
-
-
-## General
-Use the laravel default authentication to setup a restricted site.
-
-Use migrations for creating database tables.
-
-Use bootstrap for the frontend site.
-
-The useage of third party plugins is allowed.
+# ABOUT AUTHOR
+## Thabang Zwane
+[TMZwane.com](https://tmzwane.com)
+[Twiter](https://twitter.com/tm_zwane)
+[Telegram]()
+[Instagram]()
