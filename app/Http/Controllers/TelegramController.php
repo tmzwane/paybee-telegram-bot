@@ -83,7 +83,6 @@ class TelegramController extends Controller
         foreach ($telegram as $key => $telTable) {
             if (strpos($this->text, $telTable['command']) !== false)
             {
-                $this->sendMessage('In the if statement');
                 switch (true) {
                     case $telTable['command'] == '/start':
                         $command_ran = true;
@@ -95,7 +94,7 @@ class TelegramController extends Controller
                         break;
                     case $telTable['command'] == '/getBTCEquivalent':
                         $command_ran = true;
-                        $this->getBTCEquivalent();
+                        $this->getBTCEquivalent($telTable['default_setting']);
                         break;
                     case $telTable['command'] == '/getGlobal':
                         $command_ran = true;
@@ -139,7 +138,7 @@ class TelegramController extends Controller
     }
 
  
-    public function getBTCEquivalent()
+    public function getBTCEquivalent($default_option = null)
     {
         $client = new Client();
 		$res = $client->get('https://api.coindesk.com/v1/bpi/currentprice.json');
@@ -149,12 +148,12 @@ class TelegramController extends Controller
 			$pieces = explode(" ", $this->text);
 			if (count($pieces) > 2) {
 				$currency = $data['bpi'][$pieces[2]];
-				$quantity = $pieces[1];
+				$quantity = int($pieces[1]);
 				$rate = floatval($data['bpi'][$pieces[2]]['rate_float']);
 				$total_rate = $quantity / $rate ;
 			} else {
-				$currency = 'USD';
-				$quantity = 1;
+				$currency = $default_option;
+				if (count($pieces) == 2) { $quantity = int($pieces[1]); } else { $quantity = 1};
 				$rate = floatval($data['bpi'][$currency]['rate_float']);
 				$total_rate = $quantity / $rate ;
 			}
