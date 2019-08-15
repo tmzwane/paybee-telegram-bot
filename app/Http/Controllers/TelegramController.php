@@ -82,21 +82,19 @@ class TelegramController extends Controller
         foreach ($telegram as $key => $telTable) {
             if (strpos($this->text, $telTable['command']))
             {
-                switch ($telTable['command']) {
-                    case '/start':
+                switch (true) {
+                    case $telTable['command'] == '/start':
                         $this->sendMessage('All good things start like this :-)');
                         break;
-                    case '/getUserID':
+                    case $telTable['command'] == '/getUserID':
                         $this->getUserID();
                         break;
-                    case '/getBTCEquivalent':
+                    case $telTable['command'] == '/getBTCEquivalent':
                         $this->getBTCEquivalent();
                         break;
-                    case '/getGlobal':
+                    case $telTable['command'] == '/getGlobal':
                         $this->getGlobal();
                         break;
-                    default:
-                        $this->sendMessage($this->text.' is not allowed, configure settings on your profile at '.env('APP_URL'));
                 }
             } else {
                 $this->sendMessage($this->text.' is not allowed, configure settings on your profile at '.env('APP_URL'));
