@@ -148,12 +148,12 @@ class TelegramController extends Controller
 			$pieces = explode(" ", $this->text);
 			if (count($pieces) > 2) {
 				$currency = $data['bpi'][$pieces[2]];
-				$quantity = int($pieces[1]);
+				$quantity = (int)$pieces[1];
 				$rate = floatval($data['bpi'][$pieces[2]]['rate_float']);
 				$total_rate = $quantity / $rate ;
 			} else {
 				$currency = $default_option;
-				if (count($pieces) == 2) { $quantity = int($pieces[1]); } else { $quantity = 1};
+				if (count($pieces) == 2) { $quantity = (int)$pieces[1]; } else { $quantity = 1};
 				$rate = floatval($data['bpi'][$currency]['rate_float']);
 				$total_rate = $quantity / $rate ;
 			}
