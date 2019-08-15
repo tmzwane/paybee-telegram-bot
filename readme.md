@@ -309,9 +309,10 @@ After executing the command. Some of the files known as Authentication scaffoldi
 
 # UnexpectedValueException
 `The stream or file "/project/path/storage/logs/laravel-2019-08-13.log" could not be opened: failed to open stream: Permission denied`
-
+	
+	ps aux | egrep '(apache|httpd)'
 	sudo chown -R user:www-data storage
-	sudo chown -R user:www-data bootstrap/cache
+	sudo chown -R root:www-data bootstrap/cache
 	chmod -R 775 storage
 	chmod -R 775 bootstrap/cache
 

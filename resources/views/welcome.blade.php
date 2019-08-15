@@ -90,7 +90,7 @@
                 @endif
                 <br><br>
                 <div class="links">
-                    <a href="https://github.com/tmzwane/paybee-tel-bot">Project on GitHub</a>
+                    <a href="https://github.com/tmzwane/paybee-telegram-bot">Project on GitHub</a>
                     <a href="https://t.me/paybeetelbot">Telegram @paybeetelbot</a>
                     <a href="https://tmzwane.com">TMZwane.com</a>
                     <a href="https://twitter.com/tm_zwane">Tweet @tm_zwane</a>
