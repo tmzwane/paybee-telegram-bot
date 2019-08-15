@@ -83,7 +83,6 @@ class TelegramController extends Controller
         foreach ($telegram as $key => $telTable) {
             if (strpos($this->text, $telTable['command']) !== false)
             {
-                $this$this->sendMessage('What now');
                 switch (true) {
                     case $telTable['command'] == '/start':
                         $command_ran = true;
@@ -164,7 +163,9 @@ class TelegramController extends Controller
 			$rate = floatval($data['bpi'][$currency]['rate_float']);
 			$total_rate = $quantity / $rate ;
 		}
+
 		$total_rate = number_format((float)$total_rate, 7, '.', '');
+        
         $this->sendMessage($quantity." ".$currency." is ".$total_rate." BTC (".$rate." ".$currency." - 1 BTC)", true);
     }
  
