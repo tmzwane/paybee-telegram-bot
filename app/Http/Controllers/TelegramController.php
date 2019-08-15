@@ -91,7 +91,7 @@ class TelegramController extends Controller
     {
         try {
             $telegram = Telegram::where('username', $this->username)->get();
-            $this->sendMessage('Cherish the little opportunities like this, to start :-)')
+            $this->sendMessage('Cherish the little opportunities like this, to start :-)');
         } catch (Exception $exception) {
             $seed = array(
                 array('username' => $data['telegram_username'], 
@@ -182,11 +182,13 @@ class TelegramController extends Controller
     public function getUserID()
     {
         try {
-            $telegram = Telegram::where('username', $this->username)->latest()->firstOrFail();
- 
-            if ($telegram->command == '/getUserID') {
- 				$this->sendMessage($this->username, true);
+            $telegram = Telegram::where(array('username' => $this->username, 'is_active' => 1 ))->get();
+            foreach ($telegram as $key => $telTable) {
+                if ($telTable->command == '/getUserID') {
+                    $this->sendMessage($this->username, true); die();
+                }
             }
+            
         } catch (Exception $exception) {
             $error = "You must be new here.\n";
             $error .= "Please select one of the following options: \n";
