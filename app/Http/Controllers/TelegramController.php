@@ -79,26 +79,33 @@ class TelegramController extends Controller
             $telegram = Telegram::where(array('username' => $this->username, 'is_active' => 1 ))->get();
         }
 
+        $command_ran = false;
         foreach ($telegram as $key => $telTable) {
             if (strpos($this->text, $telTable['command']))
             {
                 switch (true) {
                     case $telTable['command'] == '/start':
+                        $command_ran = true;
                         $this->sendMessage('All good things start like this :-)');
                         break;
                     case $telTable['command'] == '/getUserID':
+                        $command_ran = true;
                         $this->getUserID();
                         break;
                     case $telTable['command'] == '/getBTCEquivalent':
+                        $command_ran = true;
                         $this->getBTCEquivalent();
                         break;
                     case $telTable['command'] == '/getGlobal':
+                        $command_ran = true;
                         $this->getGlobal();
                         break;
                 }
-            } else {
-                $this->sendMessage($this->text.' is not allowed, configure settings on your profile at '.env('APP_URL'));
-            }
+            } 
+        }
+
+        if ($command_ran) {
+            $this->sendMessage($this->text.' is not allowed, configure settings on your profile at '.env('APP_URL'));
         }
     }
  
