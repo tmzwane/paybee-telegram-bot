@@ -169,7 +169,7 @@ class TelegramController extends Controller
         $this->sendMessage($quantity." ".$currency." is ".$total_rate." BTC (".$rate." ".$currency." - 1 BTC)", true);
     }
  
-    public function checkDatabase()
+    public function getUserID()
     {
         try {
             $telegram = Telegram::where('username', $this->username)->latest()->firstOrFail();
