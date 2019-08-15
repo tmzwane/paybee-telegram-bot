@@ -80,28 +80,25 @@ class TelegramController extends Controller
         }
 
         foreach ($telegram as $key => $command) {
-            # code...
-        }
- 
-        switch (true) {
-            case strpos($this->text, '/start'):
-
-            	$this->sendMessage('All good things start like this :-)');
-            	break;
-            case strpos($this->text, '/menu'):
-                $this->showMenu();
-                break;
-            case strpos($this->text, '/getUserID'):
-                $this->getUserID();
-                break;
-            case strpos($this->text, '/getBTCEquivalent'):
-                $this->getBTCEquivalent();
-                break;
-            case strpos($this->text, '/getGlobal'):
-                $this->getGlobal();
-                break;
-            default:
-                $this->sendMessage($this->text.' is not allowed, configure settings on your profile at '.env('APP_URL'));
+            if (strpos($this->text, $command))
+            {
+                switch ($command) {
+                    case '/start':
+                        $this->sendMessage('All good things start like this :-)');
+                        break;
+                    case '/getUserID':
+                        $this->getUserID();
+                        break;
+                    case '/getBTCEquivalent':
+                        $this->getBTCEquivalent();
+                        break;
+                    case '/getGlobal':
+                        $this->getGlobal();
+                        break;
+                    default:
+                        $this->sendMessage($this->text.' is not allowed, configure settings on your profile at '.env('APP_URL'));
+                }
+            }
         }
     }
  
@@ -111,9 +108,6 @@ class TelegramController extends Controller
         if ($info) { $message .= $info . chr(10); }
         
         switch (true) {
-            case in_array('/menu', $telegram):
-                $message .= '/menu'.chr(10);
-                break;
             case in_array('/getUserID', $telegram):
                 $message .= '/getUserID'.chr(10);
                 break;
