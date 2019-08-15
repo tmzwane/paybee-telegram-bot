@@ -7,7 +7,7 @@ This is a laravel project integrated with a [Telegram](https://www.telegram.org/
 
 ## The bot
 
-[The Bot on Telegram](http://t.me/paybeetelbot)
+Try the [paybeetelbot](https://t.me/paybeetelbot) on Telegram
 
 The bot only offers two commands default commands, then the rest of the commands can be enabled by the user on thei  PayBee profile.
 
@@ -62,18 +62,120 @@ Is a restricted site which lets the logged in user define the following things:
 
 ## General
 
-Use the laravel default authentication to setup a restricted site.
+The app uses laravel's default authentication to restrict the site.
 
-Use migrations for creating database tables.
+Run migrations to create database tables.
 
-Use bootstrap for the frontend site.
+Bootstrap used for the frontend site.
 
-The useage of third party plugins is allowed.
 
 # SETTING UP THE PROJECT VIA GIT CLONE ON A LINUX VPS
 
+## Set up the VPS using Apache as the server
+
+SSH into your VPS, examples below are from a VPS running Ubuntu 18.04 Bionic
+Run the following commands:
+	
+	sudo apt update
+	sudo apt upgrade
+
+Change directory to Apache and copy the default vhost config to the one of your web app URL:
+
+	cd etc/apache2/sites-available/
+	cp 000-default.conf paybeetelbot.co.za.conf
+
+Enable the vhost config and restart apache:
+
+	sudo a2ensite paybeetelbot.co.za
+	systemctl reload apache2
+
+Edit the hosts file to add your web app URL:
+
+	nano /etc/hosts
+	xxx.xxx.xxx.xxx www.paybeetelbot.co.za
+
+
+Install certbot for SSL from Lets Encrypt:
+
+	sudo apt-get update
+    sudo apt-get install software-properties-common
+    sudo add-apt-repository universe
+    sudo add-apt-repository ppa:certbot/certbot
+    sudo apt-get install certbot python-certbot-apache
+    sudo certbot --apache
+
+Install NodeJS
+
+	sudo apt update
+	sudo apt-get install curl
+	curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+	sudo apt-get install nodejs
+
+Install Composer
+
+	sudo apt update
+	sudo apt install curl php-cli php-mbstring git unzip
+	cd ~
+	curl -sS https://getcomposer.org/installer -o composer-setup.php
+	HASH="$(wget -q -O - https://composer.github.io/installer.sig)"
+	php -r "if (hash_file('SHA384', 'composer-setup.php') === '$HASH') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+	sudo php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+
+
+## Housekeeping
+
+Clone the project, on your terminal type the command:
+	
+	git clone https://github.com/tmzwane/paybee-telegram-bot.git
+
+Create the .env file, on your terminal type the command:
+
+	cp env_example .env
+
+Edit the .env to set options:
+
+	nano .env
+
+	```
+	1. TELEGRAM_BOT_TOKEN={Your Bot Token}
+	2. APP_URL={Your App URL}
+	... The rest is database configs according to your database settings
+	```
+
+I've used mysql for this setup, now to setup the database:
+
+	sudo mysql
+
+	create database homestead;
+
+	CREATE USER 'homestead'@'localhost' IDENTIFIED BY '@@@ViVa2019';
+
+	GRANT ALL PRIVILEGES ON homestead . * TO 'homestead'@'localhost';
+
+	FLUSH PRIVILEGES;
+
+	sudo apt-get install php7.2-mysql
+
+## Main Course
+
+Install updates using composer for all of the packages and dependencies at once, type in the following command in the terminal:
+
+	composer update
+
+Same thing for node packages:
+
+	npm install
+
+Now compile everything:
+
+	npm run dev
+
+
 # FUTURE IMPROVEMENTS SUGGESTIONS
-References [Luno API]
+References [Luno API]()
+
+[ ] Get other currencies exchange rates against Bitcoin and Ethereum
+[ ] Create wallet addresses for the users
 
 # SETTING UP THE PROJECT FROM SCRETCH
 
@@ -153,7 +255,7 @@ Now in `TelegramController.php` file add a setWebHook method:
 ```php
 public function setWebHook()
 {
-    $url = '<a class="vglnk" href="https://paybeetelbot.co.za/" rel="nofollow"><span>https</span><span>://</span><span>paybeetelbot</span><span>.</span><span>com</span><span>/</span></a>' . env('TELEGRAM_BOT_TOKEN') . '/webhook';
+    $url = 'https://paybeetelbot.co.za/webhook';
     $response = $this->telegram->setWebhook(['url' => $url]);
  
     return $response == true ? redirect()->back() : dd($response);
@@ -177,8 +279,21 @@ It will be like `https://paybeetelbot.co.za/set-hook`.
 
 `getUpdates()` method will not work when webhook is setup. You can use `removeWebHook()` method to remove the webhook.
 	
-## Apache Errors and Fixes (on Linux - Ubuntu)
 
+## Setting Up front-end Authentication
+Execute the following command to start:
+	
+	php artisan make:auth
+
+After executing the command. Some of the files known as Authentication scaffolding generated into our application, routes have also been updated. `Route::auth()` is a method that cleanly contains all the login and register routes. The following routes will be created with their front-end:
+
+	[base_url]/register
+	[base_url]/login
+	[base_url]/http://playground/password/reset
+
+## Errors and Fixes (on Linux - Ubuntu)
+
+### Apache
 * The requested URL /get-me was not found on this server.
 	
 	Enable mod_rewrite on the apache server: `sudo a2enmod rewrite`
@@ -192,16 +307,14 @@ It will be like `https://paybeetelbot.co.za/set-hook`.
 
 * Then restart the Apache server: `service apache2 restart`
 
-## Setting Up front-end Authentication
-Execute the following command to start:
-	
-	php artisan make:auth
+# UnexpectedValueException
+`The stream or file "/project/path/storage/logs/laravel-2019-08-13.log" could not be opened: failed to open stream: Permission denied`
 
-After executing the command. Some of the files known as Authentication scaffolding generated into our application, routes have also been updated. `Route::auth()` is a method that cleanly contains all the login and register routes. The following routes will be created with their front-end:
+	sudo chown -R user:www-data storage
+	sudo chown -R user:www-data bootstrap/cache
+	chmod -R 775 storage
+	chmod -R 775 bootstrap/cache
 
-	[base_url]/register
-	[base_url]/login
-	[base_url]/http://playground/password/reset
 
 # ABOUT AUTHOR
 
@@ -211,6 +324,6 @@ After executing the command. Some of the files known as Authentication scaffoldi
 
 [Twiter](https://twitter.com/tm_zwane) follow me on twitter, I will follow back.
 
-[Telegram]() let's chat!
+[Telegram](https://t.me/tmzwane) let's have a chat!
 
-[Instagram]() I don't post much, but I'm there.
+[Instagram](https://www.instagram.com/tmzwane/) I don't post much, but I'm there.
