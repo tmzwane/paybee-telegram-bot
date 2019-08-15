@@ -79,10 +79,10 @@ class TelegramController extends Controller
             $telegram = Telegram::where(array('username' => $this->username, 'is_active' => 1 ))->get();
         }
 
-        foreach ($telegram as $key => $command) {
-            if (strpos($this->text, $command))
+        foreach ($telegram as $key => $telTable) {
+            if (strpos($this->text, $telTable['command']))
             {
-                switch ($command) {
+                switch ($telTable['command']) {
                     case '/start':
                         $this->sendMessage('All good things start like this :-)');
                         break;
@@ -98,6 +98,8 @@ class TelegramController extends Controller
                     default:
                         $this->sendMessage($this->text.' is not allowed, configure settings on your profile at '.env('APP_URL'));
                 }
+            } else {
+                $this->sendMessage($this->text.' is not allowed, configure settings on your profile at '.env('APP_URL'));
             }
         }
     }
