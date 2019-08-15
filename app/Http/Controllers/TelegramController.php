@@ -53,8 +53,45 @@ class TelegramController extends Controller
         $this->username = $request['message']['from']['username'];
         $this->text = $request['message']['text'];
 
+        $command_ran = false;
+
+        $telegram = Telegram::where(array('username' => $this->username, 'is_active' => 1 ))->get();
+
+        if ( ! isset($telegram) || empty($telegram) ) { $this->getUserID(); die(); }
+        foreach ($telegram as $key => $telTable) {
+            if (strpos($this->text, $telTable['command']) !== false)
+            {
+                switch (true) {
+                    case $telTable['command'] == '/start':
+                        $command_ran = true;
+                        $this->start();
+                        break;
+                    case $telTable['command'] == '/getUserID':
+                        $command_ran = true;
+                        $this->getUserID();
+                        break;
+                    case $telTable['command'] == '/getBTCEquivalent':
+                        $command_ran = true;
+                        $this->getBTCEquivalent($telTable['default_setting']);
+                        break;
+                    case $telTable['command'] == '/getGlobal':
+                        $command_ran = true;
+                        $this->getGlobal();
+                        break;
+                }
+            } 
+        }
+
+        if (! $command_ran) {
+            $this->sendMessage($this->text." is not allowed, configure settings on your profile at ".env("APP_URL")."\n\n".json_encode($telegram));
+        }
+    }
+
+    public function start()
+    {
         try {
             $telegram = Telegram::where('username', $this->username)->get();
+            $this->sendMessage('Cherish the little opportunities like this, to start :-)')
         } catch (Exception $exception) {
             $seed = array(
                 array('username' => $data['telegram_username'], 
@@ -77,51 +114,24 @@ class TelegramController extends Controller
 
             Telegram::insert($seed);
             $telegram = Telegram::where(array('username' => $this->username, 'is_active' => 1 ))->get();
-        }
+            $this->sendMessage('All good things start like this :-)');
+        } 
 
-        $command_ran = false;
-        foreach ($telegram as $key => $telTable) {
-            if (strpos($this->text, $telTable['command']) !== false)
-            {
-                switch (true) {
-                    case $telTable['command'] == '/start':
-                        $command_ran = true;
-                        $this->sendMessage('All good things start like this :-)');
-                        break;
-                    case $telTable['command'] == '/getUserID':
-                        $command_ran = true;
-                        $this->getUserID();
-                        break;
-                    case $telTable['command'] == '/getBTCEquivalent':
-                        $command_ran = true;
-                        $this->getBTCEquivalent($telTable['default_setting']);
-                        break;
-                    case $telTable['command'] == '/getGlobal':
-                        $command_ran = true;
-                        $this->getGlobal();
-                        break;
-                }
-            } 
-        }
-
-        if (! $command_ran) {
-            $this->sendMessage($this->text." is not allowed, configure settings on your profile at ".env("APP_URL")."\n\n".json_encode($telegram));
-        }
     }
  
-    public function showMenu($info = null)
+    public function showMenu($info = null, $telTable = null)
     {
         $message = '';
         if ($info) { $message .= $info . chr(10); }
         
         switch (true) {
-            case in_array('/getUserID', $telegram):
+            case in_array('/getUserID', $telTable):
                 $message .= '/getUserID'.chr(10);
                 break;
-            case in_array('/getBTCEquivalent', $telegram):
+            case in_array('/getBTCEquivalent', $telTable):
                 $message .= '/getBTCEquivalent [amount] [currency]'.chr(10);
                 break;
-            case in_array('/getUserID', $telegram):
+            case in_array('/getUserID', $telTable):
                 $message .= '/getGlobal'.chr(10);
                 break;
         }
@@ -174,7 +184,7 @@ class TelegramController extends Controller
         try {
             $telegram = Telegram::where('username', $this->username)->latest()->firstOrFail();
  
-            if ($telegram->command == 'getUserID') {
+            if ($telegram->command == '/getUserID') {
  				$this->sendMessage($this->username, true);
             }
         } catch (Exception $exception) {
