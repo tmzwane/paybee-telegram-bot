@@ -83,6 +83,7 @@ class TelegramController extends Controller
         foreach ($telegram as $key => $telTable) {
             if (strpos($this->text, $telTable['command']))
             {
+                $this->sendMessage('In the if statement');
                 switch (true) {
                     case $telTable['command'] == '/start':
                         $command_ran = true;
