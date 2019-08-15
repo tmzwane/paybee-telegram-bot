@@ -104,7 +104,7 @@ class TelegramController extends Controller
             } 
         }
 
-        if ($command_ran) {
+        if (! $command_ran) {
             $this->sendMessage($this->text.' is not allowed, configure settings on your profile at '.env('APP_URL'."\n\n".json_encode($telegram)));
         }
     }
