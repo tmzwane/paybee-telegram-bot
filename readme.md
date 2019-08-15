@@ -170,6 +170,19 @@ Now compile everything:
 
 	npm run dev
 
+Run migrate to create the databases:
+
+	php artisan migrate
+
+Set the webhook for the Telegram Bot:
+
+	https://paybeetelbot.co.za/set-hook
+
+If the hook already exists and pointing to wrong URL then unset it and set it with the correct URL:
+	
+	https://paybeetelbot.co.za/remove-hook
+
+	
 
 # FUTURE IMPROVEMENTS SUGGESTIONS
 References [Luno API]()
@@ -293,7 +306,7 @@ After executing the command. Some of the files known as Authentication scaffoldi
 
 ## Errors and Fixes (on Linux - Ubuntu)
 
-### Apache
+### Apache:
 * The requested URL /get-me was not found on this server.
 	
 	Enable mod_rewrite on the apache server: `sudo a2enmod rewrite`
@@ -307,7 +320,8 @@ After executing the command. Some of the files known as Authentication scaffoldi
 
 * Then restart the Apache server: `service apache2 restart`
 
-# UnexpectedValueException
+### UnexpectedValueException error:
+
 `The stream or file "/project/path/storage/logs/laravel-2019-08-13.log" could not be opened: failed to open stream: Permission denied`
 	
 	ps aux | egrep '(apache|httpd)'
@@ -316,6 +330,11 @@ After executing the command. Some of the files known as Authentication scaffoldi
 	chmod -R 775 storage
 	chmod -R 775 bootstrap/cache
 
+### php artisan migrate error:
+
+`Illuminate\Database\QueryException  : could not find driver (SQL: select * from information_schema.tables where table_schema = homestead and table_name = migrations and table_type = 'BASE TABLE')`
+
+	 sudo apt-get install php7.2-mysql
 
 # ABOUT AUTHOR
 

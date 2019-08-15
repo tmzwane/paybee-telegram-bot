@@ -78,25 +78,30 @@ class TelegramController extends Controller
             Telegram::insert($seed);
             $telegram = Telegram::where(array('username' => $this->username, 'is_active' => 1 ))->get();
         }
+
+        foreach ($telegram as $key => $command) {
+            # code...
+        }
  
         switch (true) {
             case strpos($this->text, '/start'):
+
             	$this->sendMessage('All good things start like this :-)');
             	break;
-            case strpos($this->text, '/menu') && in_array('/menu', $telegram):
+            case strpos($this->text, '/menu'):
                 $this->showMenu();
                 break;
-            case strpos($this->text, '/getUserID') && in_array('/getUserID', $telegram):
+            case strpos($this->text, '/getUserID'):
                 $this->getUserID();
                 break;
-            case strpos($this->text, '/getBTCEquivalent') && in_array('/getBTCEquivalent', $telegram):
+            case strpos($this->text, '/getBTCEquivalent'):
                 $this->getBTCEquivalent();
                 break;
-            case strpos($this->text, '/getGlobal') && in_array('/getGlobal', $telegram):
+            case strpos($this->text, '/getGlobal'):
                 $this->getGlobal();
                 break;
             default:
-                $this->sendMessage('Not allowed, configure settings on your profile at '.env('APP_URL'));
+                $this->sendMessage($this->text.' is not allowed, configure settings on your profile at '.env('APP_URL'));
         }
     }
  
