@@ -143,8 +143,15 @@ class TelegramController extends Controller
     {
         $client = new Client();
 		$res = $client->get('https://api.coindesk.com/v1/bpi/currentprice.json');
-		$data = json_decode($res->getBody());
-        $this->sendMessage(json_encode($data), true);
+		$data = json_decode($res->getBody(), TRUE);
+        $pieces = explode(" ", $this->text);
+        foreach ($data['bpi'] as $currency => $currencyData) {
+            if (count($pieces) == 2) { $quantity = (int)$pieces[1]; } else { $quantity = 1; }
+            $rate = floatval($currencyData['rate_float']);
+            $total_rate = $quantity / $rate ;
+            $this->sendMessage($quantity." ".$currency." is ".$total_rate." BTC (".$rate." ".$currency." - 1 BTC)", true);
+        }
+        
     }
 
  
