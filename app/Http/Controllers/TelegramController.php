@@ -81,7 +81,7 @@ class TelegramController extends Controller
 
         $command_ran = false;
         foreach ($telegram as $key => $telTable) {
-            if (strpos($this->text, $telTable['command']))
+            if (strpos($this->text, $telTable['command']) !== false)
             {
                 $this->sendMessage('In the if statement');
                 switch (true) {
