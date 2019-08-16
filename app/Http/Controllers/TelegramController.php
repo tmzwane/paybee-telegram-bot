@@ -210,10 +210,9 @@ class TelegramController extends Controller
                 break;
         }
 		
+        $total_rate = number_format((float)$total_rate, 7, '.', '');
         $message .= $quantity." ".$currency." is ".$total_rate." BTC (".$rate." ".$currency." - 1 BTC)";
 
-		$total_rate = number_format((float)$total_rate, 7, '.', '');
-        
         $this->sendMessage($message, true);
     }
  

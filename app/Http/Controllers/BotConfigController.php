@@ -68,28 +68,32 @@ class BotConfigController extends Controller
 
         User::where('email', $data['email'])->update(array('telegram_username' => $telegram_username));
 
-        $seed = array(
-            array('username' => $telegram_username, 
-                  'command' => '/start', 
-                  'default_setting' => '', 
-                  'is_active' => 0),
-            array('username' => $telegram_username, 
-                  'command' => '/getUserID', 
-                  'default_setting' => '', 
-                  'is_active' => 1),
-            array('username' => $telegram_username, 
-                  'command' => '/getBTCEquivalent', 
-                  'default_setting' => 'USD', 
-                  'is_active' => 1),
-            array('username' => $telegram_username, 
-                  'command' => '/getGlobal', 
-                  'default_setting' => '', 
-                  'is_active' => 0)
-        );
+        try {
+            $telegram = Telegram::where('username', $data['telegram_username'])->get();
+        } catch (Exception $exception) {
+            $seed = array(
+                array('username' => $data['telegram_username'], 
+                      'command' => '/start', 
+                      'default_setting' => '', 
+                      'is_active' => 0),
+                array('username' => $data['telegram_username'], 
+                      'command' => '/getUserID', 
+                      'default_setting' => '', 
+                      'is_active' => 1),
+                array('username' => $data['telegram_username'], 
+                      'command' => '/getBTCEquivalent', 
+                      'default_setting' => 'USD', 
+                      'is_active' => 1),
+                array('username' => $data['telegram_username'], 
+                      'command' => '/getGlobal', 
+                      'default_setting' => '', 
+                      'is_active' => 0)
+            );
 
-        Telegram::insert($seed);
+            Telegram::insert($seed);
+            $telegram = Telegram::where('username', $data['telegram_username'])->get();
+        }
         
-        $telegram = Telegram::where('username', $telegram_username)->get();
         
         $data['telegram_db_data'] = $telegram;
 
@@ -108,6 +112,17 @@ class BotConfigController extends Controller
         foreach ($input as $key => $value) {
             $id = (int) filter_var($key, FILTER_SANITIZE_NUMBER_INT);
             $field_name = str_replace('_'.$id,'',$key);
+            if ($field_name == 'is_active') {
+              switch ($value) {
+                case 'Yes':
+                  $value = true;
+                  break;
+                case 'No':
+                  $value = false;
+                  break;
+              }
+            }
+
             Telegram::where('id', $id)->update(array($field_name => $value));
         }
         

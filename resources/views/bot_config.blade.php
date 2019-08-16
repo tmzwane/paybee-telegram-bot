@@ -45,22 +45,26 @@
           </thead>
           <tbody>
             @foreach($telegram_db_data as $config_settings)
-                <tr>
-                  <td>{{ $config_settings->id }}</td>
-                  <td>{{ $config_settings->command }}</td>
-                  <td>
-                    {{Form::text("default_setting_".$config_settings->id, 
-                                 old( $config_settings->default_setting ) ? old( $config_settings->default_setting ) : (!empty( $config_settings->default_setting ) ? $config_settings->default_setting : null),
-                                 [
-                                    "class" => "form-group",
-                                    "placeholder" => $config_settings->default_setting,
-                                 ])
-                    }}
-                  </td>
-                  <td>
-                    {{ Form::checkbox('is_active_'.$config_settings->id,"1", $config_settings->is_active, null, array('id'=> 'is_active_'.$config_settings->id)) }} 
-                  </td>
-                </tr>
+              <?php
+                if( $config_settings->is_active == 0) { $options = array('No' => 'No','Yes' => 'Yes'); }
+                else { $options = array('Yes' => 'Yes','No' => 'No'); }
+              ?>
+              <tr>
+                <td>{{ $config_settings->id }}</td>
+                <td>{{ $config_settings->command }}</td>
+                <td>
+                  {{Form::text("default_setting_".$config_settings->id, 
+                               old( $config_settings->default_setting ) ? old( $config_settings->default_setting ) : (!empty( $config_settings->default_setting ) ? $config_settings->default_setting : null),
+                               [
+                                  "class" => "form-group",
+                                  "placeholder" => $config_settings->default_setting,
+                               ])
+                  }}
+                </td>
+                <td>
+                  {{ Form::select('is_active_'.$config_settings->id,  $options, null, ['class' => 'form-control']) }}
+                </td>
+              </tr>
             @endforeach
           </tbody>
           
