@@ -158,34 +158,63 @@ class TelegramController extends Controller
  
     public function getBTCEquivalent($default_option = null)
     {
+        $message = "";
         $client = new Client();
 		$res = $client->get('https://api.coindesk.com/v1/bpi/currentprice.json');
 		$data = json_decode($res->getBody(), TRUE);
 
-		if (isset($this->text) && !empty($this->text)) {
-			$pieces = explode(" ", $this->text);
-            $this->sendMessage(json_encode($pieces));
-			if (count($pieces) > 2) {
-				$currency = $data['bpi'][$pieces[2]];
-				$quantity = (int)$pieces[1];
-				$rate = floatval($data['bpi'][$pieces[2]]['rate_float']);
-				$total_rate = $quantity / $rate ;
-			} else {
-				$currency = $default_option;
-				if (count($pieces) == 2) { $quantity = (int)$pieces[1]; } else { $quantity = 1; }
-				$rate = floatval($data['bpi'][$currency]['rate_float']);
-				$total_rate = $quantity / $rate ;
-			}
-		} else {
-			$currency = 'USD';
-			$quantity = 1;
-			$rate = floatval($data['bpi'][$currency]['rate_float']);
-			$total_rate = $quantity / $rate ;
-		}
+		$pieces = explode(" ", $this->text);
+        $command = $pieces[0]; 
+
+        switch (count($pieces)) {
+            case 1:
+                $currency = $default_option;
+                $quantity = 1;
+                $rate = floatval($data['bpi'][$currency]['rate_float']);
+                $total_rate = $quantity / $rate ;
+                break;
+
+            case 2:
+                $currency = $default_option;
+                try {
+                    $quantity = (int)$pieces[1];
+                } catch (Exception $exception) {
+                    $message .= "Invalid number, command ex: '/getBTCEquivalent 10' or '/getBTCEquivalent 10 USD'\n\n";
+                    $message .= "Showing default settings\n\n";
+                    $quantity = 1;
+                }
+                $rate = floatval($data['bpi'][$currency]['rate_float']);
+                $total_rate = $quantity / $rate ;
+                break;
+
+            case 3:
+                try {
+                    $quantity = (int)$pieces[1];
+                } catch (Exception $exception) {
+                    $message .= "Invalid number, command ex: '/getBTCEquivalent 10' or '/getBTCEquivalent 10 USD'\n\n";
+                    $message .= "Showing default settings\n\n";
+                    $quantity = 1;
+                }
+                $currency = $pieces[2];
+                $rate = floatval($data['bpi'][$currency]['rate_float']);
+                $total_rate = $quantity / $rate ;
+                break;
+            
+            default:
+                $message .= "Invalid command try '/getBTCEquivalent 10' or '/getBTCEquivalent 10 USD'...\n";
+                $message .= "Showing default settings\n\n";
+                $currency = $default_option;
+                $quantity = 1;
+                $rate = floatval($data['bpi'][$currency]['rate_float']);
+                $total_rate = $quantity / $rate ;
+                break;
+        }
+		
+        $message .= $quantity." ".$currency." is ".$total_rate." BTC (".$rate." ".$currency." - 1 BTC)";
 
 		$total_rate = number_format((float)$total_rate, 7, '.', '');
         
-        $this->sendMessage($quantity." ".$currency." is ".$total_rate." BTC (".$rate." ".$currency." - 1 BTC)", true);
+        $this->sendMessage($message, true);
     }
  
     public function getUserID()

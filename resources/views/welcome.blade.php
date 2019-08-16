@@ -68,7 +68,7 @@
             
 
             <div class="content">
-                <img src="{{ asset('/public/paybee.png') }}" width="250" height="250" />
+                <img src="{{ asset('paybee.png') }}" width="250" height="250" />
                 <div class="title m-b-md">
                     PayBee Telegram Bot
                 </div>
