@@ -10,9 +10,10 @@
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
 
         <!-- Styles -->
+        <link href="{{ asset('css/app.css') }}" rel="stylesheet"/>
         <style>
             html, body {
-                background-color: #fff;
+                background-color: #e9ecef;
                 color: #636b6f;
                 font-family: 'Nunito', sans-serif;
                 font-weight: 200;
@@ -45,7 +46,7 @@
             }
 
             .title {
-                font-size: 84px;
+                font-size: 60px;
             }
 
             .links > a {
@@ -54,8 +55,11 @@
                 font-size: 13px;
                 font-weight: 600;
                 letter-spacing: .1rem;
-                text-decoration: none;
                 text-transform: uppercase;
+            }
+
+            @media screen and (max-width: 768px) {
+                .content-hide-mobile {display: none;}
             }
 
             .m-b-md {
@@ -63,40 +67,34 @@
             }
         </style>
     </head>
-    <body>
-        <div class="flex-center position-ref full-height">
-            
+    <body class="jumbotron text-center">
+        <div class="container">
+            <br><img src="{{ asset('paybee.png') }}" width="250" height="250" />
+            <div class="title m-b-md">
+                PayBee Telegram Bot
+            </div>
 
-            <div class="content">
-                <img src="{{ asset('paybee.png') }}" width="250" height="250" />
-                <div class="title m-b-md">
-                    PayBee Telegram Bot
+            <p>Bitcoin Exchange Info at Your fingertips</p><br>
+
+            @if (Route::has('login'))
+                <div class="top-center links">
+                    @auth
+                        <a href="{{ url('/bot-config') }}">Configure Bot Settings</a>
+                    @else
+                        <a href="{{ route('login') }}">Login</a>
+
+                        @if (Route::has('register'))
+                            <a href="{{ route('register') }}">Register</a>
+                        @endif
+                    @endauth
                 </div>
-
-                <p>Bitcoin Exchange Info at Your fingertips</p><br>
-
-                @if (Route::has('login'))
-                    <div class="links">
-                        @auth
-                            <a href="{{ url('/bot-config') }}">Configure Bot Settings</a>
-                        @else
-                            <a href="{{ route('login') }}">Login</a>
-
-                            @if (Route::has('register'))
-                                <a href="{{ route('register') }}">Register</a>
-                            @endif
-                        @endauth
-                    </div>
-                @endif
-                <br><br>
-                <div class="links">
-                    <a href="https://github.com/tmzwane/paybee-telegram-bot">Project on GitHub</a>
-                    <a href="https://t.me/paybeetelbot">Telegram @paybeetelbot</a>
-                    <a href="https://tmzwane.com">TMZwane.com</a>
-                    <a href="https://twitter.com/tm_zwane">Tweet @tm_zwane</a>
-                    <a href="https://t.me/tmzwane">Telegram @tmzwane</a>
-                    <a href="https://instagram.com/tmzwane">Instagram @tmzwane</a>
-                </div>
+            @endif
+            <br><br>
+            <div class="links content-hide-mobile">
+                <a href="https://github.com/tmzwane/paybee-telegram-bot">Project on GitHub</a>
+                <a href="https://t.me/paybeetelbot">Telegram @paybeetelbot</a>
+                <a href="https://tmzwane.com">TMZwane.com</a>
+                <a href="https://twitter.com/tm_zwane">Tweet @tm_zwane</a>
             </div>
         </div>
     </body>
