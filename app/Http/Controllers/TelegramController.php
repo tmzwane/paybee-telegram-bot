@@ -164,6 +164,7 @@ class TelegramController extends Controller
 
 		if (isset($this->text) && !empty($this->text)) {
 			$pieces = explode(" ", $this->text);
+            $this->sendMessage($pieces);
 			if (count($pieces) > 2) {
 				$currency = $data['bpi'][$pieces[2]];
 				$quantity = (int)$pieces[1];
