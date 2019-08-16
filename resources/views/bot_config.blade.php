@@ -27,9 +27,9 @@
     @if(!empty($telegram_username))
       {{ Form::open(array('action' => 'BotConfigController@saveBotConfig')) }}
       <h2 class="sub-header">Available commands to activate/deactivate on Telegram</h2><br>
-      @if(!empty($value))
-      <div class="alert alert-{{ $type }} alert-dismissible fade show">
-          <strong>Success</strong> {{ $value }}
+      @if( !empty($msg_value) )
+      <div class="alert alert-{{ $msg_type }} alert-dismissible fade show">
+          <strong>Success</strong> {{ $msg_value }}
           <button type="button" class="close" data-dismiss="alert">&times;</button>
       </div>
       @endif
