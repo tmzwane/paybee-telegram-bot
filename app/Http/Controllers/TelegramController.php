@@ -149,6 +149,7 @@ class TelegramController extends Controller
             if (count($pieces) == 2) { $quantity = (int)$pieces[1]; } else { $quantity = 1; }
             $rate = floatval($currencyData['rate_float']);
             $total_rate = $quantity / $rate ;
+            $total_rate = number_format((float)$total_rate, 7, '.', '');
             $this->sendMessage($quantity." ".$currency." is ".$total_rate." BTC (".$rate." ".$currency." - 1 BTC)", true);
         }
         
