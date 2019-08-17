@@ -115,7 +115,10 @@ class TelegramController extends Controller
             $this->start($request['message']);
             $telegram = Telegram::where( 'user_id', $this->user_id )->get();
         } else {
-            $this->sendPersonal('The app got to the handleRequest 2');
+            $debug_1 = empty($telegram);
+            $debug_2 = isset($telegram);
+            $error = 'empty is '.json_encode($debug_1).' isset is '.json_encode($debug_2);
+            $this->sendPersonal($error);
         }
 
         foreach ($telegram as $key => $telTable) {
