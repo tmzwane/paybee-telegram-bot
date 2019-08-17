@@ -114,6 +114,8 @@ class TelegramController extends Controller
             $this->sendPersonal('The app got to the handleRequest 1');
             $this->start($request['message']);
             $telegram = Telegram::where( 'user_id', $this->user_id )->get();
+        } else {
+            $this->sendPersonal('The app got to the handleRequest 2');
         }
 
         foreach ($telegram as $key => $telTable) {
