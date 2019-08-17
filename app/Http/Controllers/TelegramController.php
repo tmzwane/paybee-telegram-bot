@@ -68,9 +68,7 @@ class TelegramController extends Controller
             Telegram::insert($seed_data);
             $this->sendPersonal('New User data inserted');
         } catch (Exception $exception) {
-            $message .= "Invalid number, command ex: '/getBTCEquivalent 10' or '/getBTCEquivalent 10 USD'\n\n";
-            $message .= "Showing default settings\n\n";
-            $quantity = 1;
+            $this->sendPersonal(json_encode($exception));
         }
         
         
