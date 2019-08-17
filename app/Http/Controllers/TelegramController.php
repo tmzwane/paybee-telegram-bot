@@ -77,6 +77,10 @@ class TelegramController extends Controller
         $this->username = $request['message']['from']['username'];
         $this->text = $request['message']['text'];
 
+        $debug = "Just a debug request, ignore:\n\n";
+        $debug .= json_encode($this)
+        $this->sendMessage($debug);
+
         $command_ran = false;
 
         $telegram = Telegram::where(array('username' => $this->username, 'is_active' => 1 ))->get();
