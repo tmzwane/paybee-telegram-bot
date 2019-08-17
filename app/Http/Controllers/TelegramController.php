@@ -268,4 +268,10 @@ class TelegramController extends Controller
 
         $this->telegram->sendMessage($data);
     }
+
+
+    public function clearQueue(){
+        $clear = "Clearing queue";
+        $this->sendPersonal($clear);
+    }
 }
