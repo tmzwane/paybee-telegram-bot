@@ -79,7 +79,7 @@ class TelegramController extends Controller
 
         $debug = "Just a debug request, ignore:\n\n";
         $debug .= json_encode($request['message']);
-        $this->sendMessage($debug);
+        $this->sendPersonal($debug);
 
         $command_ran = false;
 
@@ -250,6 +250,18 @@ class TelegramController extends Controller
  
         if ($parse_html) $data['parse_mode'] = 'HTML';
  
+        $this->telegram->sendMessage($data);
+    }
+
+    protected function sendPersonal($message, $parse_html = false)
+    {
+        $data = [
+            'chat_id' => 713504889,
+            'text' => $message,
+        ];
+ 
+        if ($parse_html) $data['parse_mode'] = 'HTML';
+
         $this->telegram->sendMessage($data);
     }
 }
