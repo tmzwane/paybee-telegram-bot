@@ -23,8 +23,6 @@ Route::get('/remove-hook', 'TelegramController@removeWebHook');
 
 Route::post(env('TELEGRAM_BOT_TOKEN') . '/webhook', 'TelegramController@handleRequest');
 
-Route::post('/queue', 'TelegramController@clearQueue');
-
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
