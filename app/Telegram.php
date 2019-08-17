@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Telegram extends Model
 {
-    protected $fillable = ['username', 'command', 'default_setting', 'is_active'];
+    protected $fillable = ['user_id','username', 'command', 'default_setting', 'is_active'];
 }
