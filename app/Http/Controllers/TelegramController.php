@@ -61,8 +61,14 @@ class TelegramController extends Controller
             unset($data['command']); unset($data['default_setting']);
         }
         
-
-        Telegram::insert($seed_data);
+        try {
+            Telegram::insert($seed_data);
+            $this->sendPersonal('New User data inserted');
+        } catch (Exception $exception) {
+            $error = "Debug report \n\n";
+            $error .= $exception;
+            $this->sendPersonal($error);
+        } 
     }
 
     public function setWebHook()
