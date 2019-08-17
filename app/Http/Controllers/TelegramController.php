@@ -29,23 +29,23 @@ class TelegramController extends Controller
 
     public function seed($telegram_data)
     {
-        $this->sendPersonal('The app got to the seed 1');
+
         $profile = $telegram_data['from'];
         $commands = ['/start', '/getUserID', '/getBTCEquivalent', '/getGlobal'];
         $seed_data = array(); $data = array();
-        $this->sendPersonal('The app got to the seed 2');
+
         if ( isset($profile['username']) ) {
             $data['username'] = $profile['username'];
         }
-        $this->sendPersonal('The app got to the seed 3');
+       
         if (isset($profile['first_name'])) {
             $data['first_name'] = $profile['first_name'];
         }
-        $this->sendPersonal('The app got to the seed 4');
+
         if (isset($profile['last_name'])) {
             $data['last_name'] = $profile['last_name'];
         }
-        $this->sendPersonal('The app got to the seed 5');
+
         foreach ($commands as $command) {
             
             $data['command'] = $command;
@@ -62,14 +62,10 @@ class TelegramController extends Controller
             unset($data['command']); unset($data['default_setting']);
         }
         
-        try {
-            Telegram::insert($seed_data);
-            $this->sendPersonal('New User data inserted');
-        } catch (Exception $exception) {
-            $error = "Debug report \n\n";
-            $error .= $exception;
-            $this->sendPersonal($error);
-        } 
+
+        Telegram::insert($seed_data);
+        $this->sendPersonal('New User data inserted');
+
     }
 
     public function setWebHook()
