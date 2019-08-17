@@ -111,15 +111,9 @@ class TelegramController extends Controller
         $telegram = Telegram::where( 'user_id', $this->user_id )->get();
 
         if ( empty($telegram) || ! isset($telegram[0]) ) {
-            $this->sendPersonal('The app got to the handleRequest 1');
             $this->start($request['message']);
             $telegram = Telegram::where( 'user_id', $this->user_id )->get();
-        } else {
-            $debug_1 = empty($telegram);
-            $debug_2 = isset($telegram);
-            $error = 'empty is '.json_encode($debug_1).' isset is '.json_encode($debug_2);
-            $this->sendPersonal($error);
-        }
+        } 
 
         foreach ($telegram as $key => $telTable) {
             if (strpos($this->text, $telTable['command']) !== false)
@@ -154,7 +148,7 @@ class TelegramController extends Controller
     {
         $telegram = Telegram::where( 'user_id', $this->user_id )->get();
 
-        if ( empty($telegram) || ! isset($telegram)) {
+        if ( empty($telegram) || ! isset($telegram[0]) ) {
             $this->seed($telegram_data);
             $this->sendMessage('All good things start like this :-)');
         } else {
