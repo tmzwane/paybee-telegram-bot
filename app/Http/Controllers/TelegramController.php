@@ -110,7 +110,7 @@ class TelegramController extends Controller
 
         $telegram = Telegram::where( 'user_id', $this->user_id )->get();
 
-        if ( empty($telegram) || ! isset($telegram) ) {
+        if ( empty($telegram) || ! isset($telegram[0]) ) {
             $this->sendPersonal('The app got to the handleRequest 1');
             $this->start($request['message']);
             $telegram = Telegram::where( 'user_id', $this->user_id )->get();
