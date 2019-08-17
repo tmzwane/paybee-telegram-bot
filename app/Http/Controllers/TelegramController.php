@@ -78,7 +78,7 @@ class TelegramController extends Controller
         $this->text = $request['message']['text'];
 
         $debug = "Just a debug request, ignore:\n\n";
-        $debug .= json_encode($request);
+        $debug .= json_encode($request['message']);
         $this->sendMessage($debug);
 
         $command_ran = false;
