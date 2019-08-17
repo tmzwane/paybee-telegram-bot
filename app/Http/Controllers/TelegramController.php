@@ -83,7 +83,11 @@ class TelegramController extends Controller
 
         $command_ran = false;
 
-        $telegram = Telegram::where(array('username' => $this->username, 'is_active' => 1 ))->get();
+        try {
+            $telegram = Telegram::where('username', $this->username)->get();
+        } catch (Exception $exception) {
+            $this->start();
+        } 
 
         foreach ($telegram as $key => $telTable) {
             if (strpos($this->text, $telTable['command']) !== false)
