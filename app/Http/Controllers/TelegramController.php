@@ -108,13 +108,12 @@ class TelegramController extends Controller
 
         $command_ran = false;
 
-        try {
+        $telegram = Telegram::where( 'user_id', $this->user_id )->get();
+
+        if ( empty($telegram)) {
+            $this->start($request['message']);
             $telegram = Telegram::where( 'user_id', $this->user_id )->get();
-        } catch (Exception $exception) {
-            $this->seed($request['message']);
-            $this->sendMessage('All good things start like this :-)');
-            $telegram = Telegram::where( 'user_id', $this->user_id )->get();
-        } 
+        }
 
         foreach ($telegram as $key => $telTable) {
             if (strpos($this->text, $telTable['command']) !== false)
