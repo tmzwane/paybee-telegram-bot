@@ -46,6 +46,8 @@ class TelegramController extends Controller
             $data['last_name'] = $profile['last_name'];
         }
 
+        $data['user_id'] = $profile['id'];
+
         foreach ($commands as $command) {
             
             $data['command'] = $command;
