@@ -28,8 +28,6 @@ class BotConfigController extends Controller
 
         $data['email'] = Auth::user()->email;
 
-        $telegram = Telegram::where('user_id', $telId)->get();
-
         $data['telegram_user_id'] = Auth::user()->telegram_user_id;
 
         $telegram = $this->seed($data['telegram_user_id']);
@@ -45,15 +43,16 @@ class BotConfigController extends Controller
 
     public function setUserID(Request $request)
     {
-        $telegram_username =  $request->input('telegram_username');
+        $telegram_userId =  $request->input('telegram_user_id');
         
         $data = array();
         $data['user_id'] = Auth::user()->id;
         $data['email'] = Auth::user()->email;
+        $data['telegram_user_id'] = Auth::user()->telegram_user_id;
 
-        User::where('email', $data['email'])->update(array('telegram_username' => $telegram_username));
+        User::where('email', $data['email'])->update(array('telegram_user_id' => $telegram_userId));
 
-        $telegram = $this->seed($data['telegram_username']);
+        $telegram = $this->seed($telegram_userId);
 
         $data['telegram_db_data'] = $telegram;
         $data['msg_type'] = 'success';
