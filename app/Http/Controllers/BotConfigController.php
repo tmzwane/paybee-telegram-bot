@@ -37,7 +37,7 @@ class BotConfigController extends Controller
         $data['telegram_db_data'] = $telegram;
 
         $data['msg_type'] = '';
-        
+
         $data['msg_value'] = '';
 
         return view('bot_config')->with($data);

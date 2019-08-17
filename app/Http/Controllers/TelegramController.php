@@ -38,11 +38,11 @@ class TelegramController extends Controller
         }
 
         if (isset($profile['first_name'])) {
-            $data['first_name'];
+            $data['first_name'] = $profile['first_name'];
         }
 
         if (isset($profile['last_name'])) {
-            $data['last_name'];
+            $data['last_name'] = $profile['last_name'];
         }
 
         foreach ($commands as $command) {
@@ -50,11 +50,11 @@ class TelegramController extends Controller
             $data['command'] = $command;
             
             if ($command == '/getBTCEquivalent') {
-                $data['is_active'] = 1;
+                $data['default_setting'] = 'USD';
             }
 
             if ($command == '/getBTCEquivalent' || $command == '/getUserID') {
-                $data['default_setting'] = 'USD';
+                $data['is_active'] = 1;
             }
 
             array_push($seed_data, $data);
@@ -143,7 +143,6 @@ class TelegramController extends Controller
             $this->sendMessage('Cherish the little opportunities like this, to start again :-)');
         } catch (Exception $exception) {
             $this->seed(telegram_message_data);
-            $telegram = Telegram::where(array('username' => $this->user_id, 'is_active' => 1 ))->get();
             $this->sendMessage('All good things start like this :-)');
         } 
 
@@ -253,7 +252,7 @@ class TelegramController extends Controller
             $telegram = Telegram::where(array('user_id' => $this->user_id, 'is_active' => 1 ))->get();
             foreach ($telegram as $key => $telTable) {
                 if ($telTable->command == '/getUserID') {
-                    $this->sendMessage($this->username, true); die();
+                    $this->sendMessage($this->user_id, true); die();
                 }
             }
             
