@@ -27,28 +27,42 @@ class TelegramController extends Controller
         return $response;
     }
 
-    public function seed($telUser)
+    public function seed($telegram_data)
     {
-        $data = array(
-                array('username' => $telUser, 
-                      'command' => '/start', 
-                      'default_setting' => '', 
-                      'is_active' => 0),
-                array('username' => $telUser, 
-                      'command' => '/getUserID', 
-                      'default_setting' => '', 
-                      'is_active' => 1),
-                array('username' => $telUser, 
-                      'command' => '/getBTCEquivalent', 
-                      'default_setting' => 'USD', 
-                      'is_active' => 1),
-                array('username' => $telUser, 
-                      'command' => '/getGlobal', 
-                      'default_setting' => '', 
-                      'is_active' => 0)
-            );
+        $profile = $telegram_data['from'];
+        $commands = ['/start', '/getUserID', '/getBTCEquivalent', '/getGlobal'];
+        $seed_data = array(); $data = array();
 
-        Telegram::insert($data);
+        if ( isset($profile['username']) ) {
+            $data['username'] = $profile['username'];
+        }
+
+        if (isset($profile['first_name'])) {
+            $data['first_name'];
+        }
+
+        if (isset($profile['last_name'])) {
+            $data['last_name'];
+        }
+
+        foreach ($commands as $command) {
+            
+            $data['command'] = $command;
+            
+            if ($command == '/getBTCEquivalent') {
+                $data['is_active'] = 1;
+            }
+
+            if ($command == '/getBTCEquivalent' || $command == '/getUserID') {
+                $data['default_setting'] = 'USD';
+            }
+
+            array_push($seed_data, $data);
+            unset($data['command']); unset($data['default_setting']);
+        }
+        
+
+        Telegram::insert($seed_data);
     }
 
     public function setWebHook()
@@ -73,8 +87,12 @@ class TelegramController extends Controller
 
 	public function handleRequest(Request $request)
     {
+        if (isset($request['message']['from']['username'])) {
+            $this->username = $request['message']['from']['username'];
+        }
+
         $this->chat_id = $request['message']['chat']['id'];
-        $this->username = $request['message']['from']['username'];
+        $this->user_id = $request['message']['from']['id'];
         $this->text = $request['message']['text'];
 
         $debug = "Just a debug request, ignore:\n\n";
@@ -84,9 +102,9 @@ class TelegramController extends Controller
         $command_ran = false;
 
         try {
-            $telegram = Telegram::where('username', $this->username)->get();
+            $telegram = Telegram::where( 'user_id', $this->user_id )->get();
         } catch (Exception $exception) {
-            $this->start();
+            $this->start($request['message']);
         } 
 
         foreach ($telegram as $key => $telTable) {
@@ -95,7 +113,7 @@ class TelegramController extends Controller
                 switch (true) {
                     case $telTable['command'] == '/start':
                         $command_ran = true;
-                        $this->start();
+                        $this->start($request['message']);
                         break;
                     case $telTable['command'] == '/getUserID':
                         $command_ran = true;
@@ -118,14 +136,14 @@ class TelegramController extends Controller
         }
     }
 
-    public function start()
+    public function start($telegram_message_data)
     {
         try {
-            $telegram = Telegram::where('username', $this->username)->get();
+            $telegram = Telegram::where('user_id', $this->user_id)->get();
             $this->sendMessage('Cherish the little opportunities like this, to start again :-)');
         } catch (Exception $exception) {
-            $this->seed($this->username);
-            $telegram = Telegram::where(array('username' => $this->username, 'is_active' => 1 ))->get();
+            $this->seed(telegram_message_data);
+            $telegram = Telegram::where(array('username' => $this->user_id, 'is_active' => 1 ))->get();
             $this->sendMessage('All good things start like this :-)');
         } 
 
@@ -207,6 +225,7 @@ class TelegramController extends Controller
                     $message .= "Showing default settings\n\n";
                     $quantity = 1;
                 }
+
                 $currency = $pieces[2];
                 $rate = floatval($data['bpi'][$currency]['rate_float']);
                 $total_rate = $quantity / $rate ;
@@ -231,7 +250,7 @@ class TelegramController extends Controller
     public function getUserID()
     {
         try {
-            $telegram = Telegram::where(array('username' => $this->username, 'is_active' => 1 ))->get();
+            $telegram = Telegram::where(array('user_id' => $this->user_id, 'is_active' => 1 ))->get();
             foreach ($telegram as $key => $telTable) {
                 if ($telTable->command == '/getUserID') {
                     $this->sendMessage($this->username, true); die();

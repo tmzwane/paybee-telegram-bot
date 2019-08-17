@@ -15,7 +15,10 @@ class CreateTelegramsTable extends Migration
     {
         Schema::create('telegrams', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('username');
+            $table->string('user_id')->nullable();
+            $table->string('username')->nullable();
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
             $table->string('command');
             $table->string('default_setting')->nullable();
             $table->boolean('is_active')->default('0');;

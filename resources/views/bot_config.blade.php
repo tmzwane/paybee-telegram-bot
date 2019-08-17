@@ -8,12 +8,12 @@
         <div class="col-md-7 order-md-2">
           <br><br><br>
           <br><h2 class="featurette-heading">
-            @if(!empty($telegram_username))
-                Telegram UserID: {{$telegram_username}}
+            @if(!empty($telegram_user_id))
+                Telegram UserID: {{$telegram_user_id}}
             @else
                 {{ Form::open(array('action' => 'BotConfigController@setUserID')) }}
-                {{ Form::label('telegram_username', 'Enter your Telegram UserID') }}
-                {{ Form::text('telegram_username')}} 
+                {{ Form::label('telegram_user_id', 'Enter your Telegram UserID') }}
+                {{ Form::text('telegram_user_id')}} 
                 {{ Form::submit('Set Telegram UserID')}} 
                 {{ Form::close() }}
             @endif
@@ -24,7 +24,7 @@
         </div>
       </div>
     <br>
-    @if(!empty($telegram_username))
+    @if(!empty($telegram_user_id))
       {{ Form::open(array('action' => 'BotConfigController@saveBotConfig')) }}
       <h2 class="sub-header">Available commands to activate/deactivate on Telegram</h2><br>
       @if( !empty($msg_value) )

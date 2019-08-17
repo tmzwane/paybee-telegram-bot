@@ -23,15 +23,21 @@ class BotConfigController extends Controller
     public function index()
     {
         $data = array();
-        $data['user_id'] = Auth::user()->id;
-        $data['email'] = Auth::user()->email;
-        $data['telegram_username'] = Auth::user()->telegram_username;
 
-        $telegram = $this->seed($data['telegram_username']);
+        $data['id'] = Auth::user()->id;
+
+        $data['email'] = Auth::user()->email;
+
+        $telegram = Telegram::where('user_id', $telId)->get();
+
+        $data['telegram_user_id'] = Auth::user()->telegram_user_id;
+
+        $telegram = $this->seed($data['telegram_user_id']);
 
         $data['telegram_db_data'] = $telegram;
 
         $data['msg_type'] = '';
+        
         $data['msg_value'] = '';
 
         return view('bot_config')->with($data);
@@ -81,9 +87,9 @@ class BotConfigController extends Controller
         $data = array();
         $data['user_id'] = Auth::user()->id;
         $data['email'] = Auth::user()->email;
-        $data['telegram_username'] = Auth::user()->telegram_username;
+        $data['telegram_user_id'] = Auth::user()->telegram_user_id;
 
-        $telegram = $this->seed($data['telegram_username']);
+        $telegram = $this->seed($data['telegram_user_id']);
 
         $data['telegram_db_data'] = $telegram;
 
@@ -93,30 +99,44 @@ class BotConfigController extends Controller
         return view('bot_config')->with($data);
     }
 
-    public function seed($telUser){
+    public function seed($telId){
+      
       try {
-            $telegram = Telegram::where('username', $telUser)->get();
+            $telegram = Telegram::where('user_id', $telId)->get();
         } catch (Exception $exception) {
-            $seed = array(
-                array('username' => $telUser, 
-                      'command' => '/start', 
-                      'default_setting' => '', 
-                      'is_active' => 0),
-                array('username' => $telUser, 
-                      'command' => '/getUserID', 
-                      'default_setting' => '', 
-                      'is_active' => 1),
-                array('username' => $telUser, 
-                      'command' => '/getBTCEquivalent', 
-                      'default_setting' => 'USD', 
-                      'is_active' => 1),
-                array('username' => $telUser, 
-                      'command' => '/getGlobal', 
-                      'default_setting' => '', 
-                      'is_active' => 0)
-            );
+            $commands = ['/start', '/getUserID', '/getBTCEquivalent', '/getGlobal'];
+            $seed_data = array(); $data = array();
 
-            Telegram::insert($seed);
+            if ( isset($profile['username']) ) {
+                $data['username'] = $profile['username'];
+            }
+
+            if (isset($profile['first_name'])) {
+                $data['first_name'];
+            }
+
+            if (isset($profile['last_name'])) {
+                $data['last_name'];
+            }
+
+            foreach ($commands as $command) {
+                
+                $data['command'] = $command;
+                
+                if ($command == '/getBTCEquivalent') {
+                    $data['is_active'] = 1;
+                }
+
+                if ($command == '/getBTCEquivalent' || $command == '/getUserID') {
+                    $data['default_setting'] = 'USD';
+                }
+
+                array_push($seed_data, $data);
+                unset($data['command']); unset($data['default_setting']);
+            }
+            
+
+            Telegram::insert($seed_data);
             $telegram = Telegram::where('username', $telUser)->get();
         }
 
