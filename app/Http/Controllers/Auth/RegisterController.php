@@ -52,7 +52,7 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'telegram_username'  => ['nullable', 'string', 'max:255'],
+            'telegram_user_id'  => ['nullable', 'string', 'max:255'],
         ]);
     }
 
@@ -68,7 +68,7 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'telegram_username' =>$data['telegram_username'],
+            'telegram_user_id' =>$data['telegram_user_id'],
         ]);
     }
 }

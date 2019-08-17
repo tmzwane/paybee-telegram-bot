@@ -62,10 +62,10 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="telegram_username" class="col-md-4 col-form-label text-md-right">{{ __('Telegram Username') }}</label>
+                            <label for="telegram_user_id" class="col-md-4 col-form-label text-md-right">{{ __('Telegram UserID') }}</label>
 
                             <div class="col-md-6">
-                                <input id="telegram_username" type="text" class="form-control" name="telegram_username" value="{{ old('telegram_username') }}" autocomplete="telegram_username" autofocus>
+                                <input id="telegram_user_id" type="text" class="form-control" name="telegram_user_id" value="{{ old('telegram_user_id') }}" autocomplete="telegram_user_id" autofocus>
                             </div>
                         </div>
 

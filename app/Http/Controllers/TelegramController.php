@@ -63,7 +63,7 @@ class TelegramController extends Controller
             } else {
                 $data['is_active'] = 0;
             }
-            
+
             $this->sendPersonal('Pushing in '.json_encode($data));
             array_push($seed_data, $data);
             unset($data['command']); unset($data['default_setting']);
@@ -75,9 +75,7 @@ class TelegramController extends Controller
         } catch (Exception $exception) {
             $this->sendPersonal(json_encode($exception));
         }
-        
-        
-
+     
     }
 
     public function setWebHook()
