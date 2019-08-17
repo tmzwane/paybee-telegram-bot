@@ -27,6 +27,30 @@ class TelegramController extends Controller
         return $response;
     }
 
+    public function seed($telUser)
+    {
+        $data = array(
+                array('username' => $telUser, 
+                      'command' => '/start', 
+                      'default_setting' => '', 
+                      'is_active' => 0),
+                array('username' => $telUser, 
+                      'command' => '/getUserID', 
+                      'default_setting' => '', 
+                      'is_active' => 1),
+                array('username' => $telUser, 
+                      'command' => '/getBTCEquivalent', 
+                      'default_setting' => 'USD', 
+                      'is_active' => 1),
+                array('username' => $telUser, 
+                      'command' => '/getGlobal', 
+                      'default_setting' => '', 
+                      'is_active' => 0)
+            );
+
+        Telegram::insert($data);
+    }
+
     public function setWebHook()
 	{
 	    $url = env('APP_URL');
@@ -57,7 +81,6 @@ class TelegramController extends Controller
 
         $telegram = Telegram::where(array('username' => $this->username, 'is_active' => 1 ))->get();
 
-        if ( ! isset($telegram) || empty($telegram) ) { $this->getUserID(); die(); }
         foreach ($telegram as $key => $telTable) {
             if (strpos($this->text, $telTable['command']) !== false)
             {
@@ -91,28 +114,9 @@ class TelegramController extends Controller
     {
         try {
             $telegram = Telegram::where('username', $this->username)->get();
-            $this->sendMessage('Cherish the little opportunities like this, to start :-)');
+            $this->sendMessage('Cherish the little opportunities like this, to start again :-)');
         } catch (Exception $exception) {
-            $seed = array(
-                array('username' => $data['telegram_username'], 
-                      'command' => '/start', 
-                      'default_setting' => '', 
-                      'is_active' => 0),
-                array('username' => $data['telegram_username'], 
-                      'command' => '/getUserID', 
-                      'default_setting' => '', 
-                      'is_active' => 1),
-                array('username' => $data['telegram_username'], 
-                      'command' => '/getBTCEquivalent', 
-                      'default_setting' => 'USD', 
-                      'is_active' => 1),
-                array('username' => $data['telegram_username'], 
-                      'command' => '/getGlobal', 
-                      'default_setting' => '', 
-                      'is_active' => 0)
-            );
-
-            Telegram::insert($seed);
+            $this->seed($this->username)
             $telegram = Telegram::where(array('username' => $this->username, 'is_active' => 1 ))->get();
             $this->sendMessage('All good things start like this :-)');
         } 
