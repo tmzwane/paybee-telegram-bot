@@ -105,6 +105,7 @@ class TelegramController extends Controller
             $telegram = Telegram::where( 'user_id', $this->user_id )->get();
         } catch (Exception $exception) {
             $this->start($request['message']);
+            $telegram = Telegram::where( 'user_id', $this->user_id )->get();
         } 
 
         foreach ($telegram as $key => $telTable) {
