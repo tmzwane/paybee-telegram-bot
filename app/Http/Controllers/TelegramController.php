@@ -137,13 +137,13 @@ class TelegramController extends Controller
         }
     }
 
-    public function start($telegram_message_data)
+    public function start($telegram_data)
     {
         try {
             $telegram = Telegram::where('user_id', $this->user_id)->get();
             $this->sendMessage('Cherish the little opportunities like this, to start again :-)');
         } catch (Exception $exception) {
-            $this->seed(telegram_message_data);
+            $this->seed($telegram_data);
             $this->sendMessage('All good things start like this :-)');
         } 
 
