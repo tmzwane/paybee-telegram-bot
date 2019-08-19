@@ -11,6 +11,7 @@
             @if(!empty($telegram_user_id))
                 Telegram UserID: {{$telegram_user_id}}
             @else
+                Get your ID by typing <b>/getUserID</b> to the bot! <br><br>
                 {{ Form::open(array('action' => 'BotConfigController@setUserID')) }}
                 {{ Form::label('telegram_user_id', 'Enter your Telegram UserID') }}
                 {{ Form::text('telegram_user_id')}} 
