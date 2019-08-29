@@ -9,7 +9,7 @@ This is a laravel project integrated with a [Telegram](https://www.telegram.org/
 
 Try the [paybeetelbot](https://t.me/paybeetelbot) on Telegram
 
-The bot only offers two commands default commands, then the rest of the commands can be enabled by the user on thei  PayBee profile.
+The bot only offers two default commands, then the rest of the commands can be enabled by the user on their  PayBee profile.
 
 The first default command fetches the current BTC rate from [Coindesk](http://www.coindesk.com/api/) and display the BTC equivalent for a given amount to the user in the chat.
 
@@ -48,10 +48,10 @@ Is a restricted site which lets the logged in user define the following things:
 
 * Default currency of the bot
 
-* All settings for the bot you think should be settable by the user:
-	[ ] Configure start method to get a special gretting when calling the start command. 
-	[ ] Configure menu method to find all of the available commands. 
-	[ ] Configure getGlobal method to view all the exchange rates available against BTC.
+* The rest of the bot settings settable by the user:
+	<br>[ ] Configure start method to get a special greeting when calling the start command. 
+	<br>[ ] Configure menu method to find all of the available commands. 
+	<br>[ ] Configure getGlobal method to view all the exchange rates available against BTC.
 
 * Also this site should show if a telegram account is already linked to the user account.
 
